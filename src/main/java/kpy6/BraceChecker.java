@@ -1,4 +1,4 @@
-package kpy6.ValidBraces;
+package kpy6;
 
 import java.util.Stack;
 

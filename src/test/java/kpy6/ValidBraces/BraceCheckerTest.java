@@ -1,5 +1,6 @@
 package kpy6.ValidBraces;
 
+import kpy6.BraceChecker;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;

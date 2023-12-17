@@ -1,4 +1,4 @@
-package kpy6.searchFiles;
+package kpy6;
 
 import java.io.File;
 
