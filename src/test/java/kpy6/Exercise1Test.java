@@ -1,4 +1,4 @@
-package kpy6.ValidBraces;
+package kpy6;
 
 import kpy6.Exercise1;
 import org.junit.Test;
