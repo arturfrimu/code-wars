@@ -1,9 +1,5 @@
 package kpy6;
 
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.Map;
-
 /**
  * Given an array of integers, find the one that appears an odd number of times. <br>
  * There will always be only one integer that appears an odd number of times.  <br>
@@ -16,18 +12,10 @@ import java.util.Map;
  */
 public class Exercise2 {
     public static int findIt(int[] a) {
-        int currentNumber = Integer.MAX_VALUE;
-        Map<Integer, Integer> map = new HashMap<>();
-
-        for (int i = 0; i < a.length; i++) {
-            int current = a[i];
-            if (map.containsKey(current)) {
-                map.put(current, map.get(current) + 1);
-            } else {
-                map.put(current, 1);
-            }
+        int xor = 0;
+        for (int num : a) {
+            xor ^= num;
         }
-
-        return map.entrySet().stream().max(Comparator.comparingInt(Map.Entry::getValue)).get().getKey();
+        return xor;
     }
 }
