@@ -21,11 +21,19 @@ public class Exercise3 {
         if (arr == null || arr.length < 3) {
             return 0;
         }
-        Arrays.sort(arr);
-        int sum = 0;
-        for (int i = 1; i < arr.length - 1; i++) {
-            sum += arr[i];
-        }
-        return sum;
+        int min = Arrays.stream(arr).min().getAsInt();
+        int max = Arrays.stream(arr).max().getAsInt();
+
+        int sum = Arrays.stream(arr).sum();
+        return sum - min - max;
+
+//        if (arr == null || arr.length < 3) {
+//            return 0;
+//        }
+//        Arrays.sort(arr);
+//        int sum = 0;
+//        for (int i = 1; i < arr.length - 1; i++) {
+//            sum += arr[i];
+//        }
     }
 }
