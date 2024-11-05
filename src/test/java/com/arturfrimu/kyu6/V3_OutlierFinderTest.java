@@ -3,8 +3,6 @@ package com.arturfrimu.kyu6;
 import org.junit.Test;
 
 import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 import static org.junit.Assert.assertEquals;
@@ -16,13 +14,13 @@ import static org.junit.Assert.assertEquals;
 public class V3_OutlierFinderTest {
 
     public static int findOutlier(int[] integers) {
-        Map<Boolean, List<Integer>> oddOrEvenToItsList = Arrays.stream(integers).boxed().collect(Collectors.groupingBy(n -> n % 2 == 0));
-        List<Integer> oddNumbers = oddOrEvenToItsList.get(true);
-        if (oddNumbers.size() == 1) {
-            return oddNumbers.get(0);
-        } else {
-            return oddOrEvenToItsList.get(false).get(0);
-        }
+        return Arrays.stream(integers).boxed().collect(Collectors.groupingBy(n -> n % 2 == 0))
+                .values()
+                .stream()
+                .filter(list -> list.size() == 1)
+                .findFirst()
+                .orElseThrow(() -> new UnsupportedOperationException("Incorrect count of even or odd numbers in the input"))
+                .get(0);
     }
 
     @Test
