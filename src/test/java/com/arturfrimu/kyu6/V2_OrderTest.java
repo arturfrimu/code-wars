@@ -2,6 +2,11 @@ package com.arturfrimu.kyu6;
 
 import org.junit.Test;
 
+import java.util.Arrays;
+import java.util.Map;
+import java.util.Stack;
+import java.util.TreeMap;
+
 import static org.junit.Assert.assertEquals;
 
 /**
@@ -16,37 +21,38 @@ public class V2_OrderTest {
 
         String[] splitedWords = words.split(" ");
 
-        int wordsCount = splitedWords.length;
+        Map<Integer, Stack<String>> linkedHashMap = new TreeMap<>();
 
-        String[] finalWords = new String[wordsCount];
+        Arrays.stream(splitedWords)
+                .forEach(splitedWord -> {
+                    int wordPosition = splitedWord.toLowerCase()
+                                               .chars()
+                                               .boxed()
+                                               .filter(Character::isDigit)
+                                               .distinct()
+                                               .findFirst()
+                                               .map(Character::getNumericValue)
+                                               .get();
 
-        for (String splitedWord : splitedWords) {
-            char[] charArray = splitedWord.toCharArray();
-            int digit = 1;
-            for (Character c : charArray) {
-                if (Character.isDigit(c)) {
-                    int index = splitedWord.indexOf(c);
-                    char c1 = splitedWord.charAt(index);
-                    digit = Integer.parseInt(c1 + "") - 1;
-                }
-            }
+                    if (linkedHashMap.containsKey(wordPosition)) {
+                        linkedHashMap.get(wordPosition).push(splitedWord);
+                    } else {
+                        Stack<String> objects = new Stack<>();
+                        objects.push(splitedWord);
+                        linkedHashMap.put(wordPosition, objects);
+                    }
+                });
 
-            if (finalWords[digit] != null) {
-                if (digit == 0) {
-                    String existingValue = finalWords[digit];
-                    finalWords[digit + 1] = existingValue;
-                    finalWords[digit] = splitedWord;
-                } else {
-                    String existingValue = finalWords[digit];
-                    finalWords[digit] = existingValue;
-                    finalWords[digit - 1] = splitedWord;
-                }
-            } else {
-                finalWords[digit] = splitedWord;
+        String result = "";
+        for (Map.Entry<Integer, Stack<String>> entry : linkedHashMap.entrySet()) {
+            Stack<String> stack = entry.getValue();
+            int size = stack.size();
+            for (int i = 0; i < size; i++) {
+                result = result + " " + stack.pop();
             }
         }
 
-        return String.join(" ", finalWords);
+        return result.trim();
     }
 
     @Test
