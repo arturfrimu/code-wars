@@ -4,6 +4,8 @@ import org.junit.Test;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import static org.junit.Assert.assertEquals;
 
@@ -14,12 +16,12 @@ import static org.junit.Assert.assertEquals;
 public class V3_OutlierFinderTest {
 
     public static int findOutlier(int[] integers) {
-        List<Integer> odds = Arrays.stream(integers).boxed().filter(num -> num % 2 == 0).toList();
-
-        if (odds.size() == 1) {
-            return odds.get(0);
+        Map<Boolean, List<Integer>> oddOrEvenToItsList = Arrays.stream(integers).boxed().collect(Collectors.groupingBy(n -> n % 2 == 0));
+        List<Integer> oddNumbers = oddOrEvenToItsList.get(true);
+        if (oddNumbers.size() == 1) {
+            return oddNumbers.get(0);
         } else {
-            return Arrays.stream(integers).boxed().filter(num -> num % 2 != 0).findFirst().get();
+            return oddOrEvenToItsList.get(false).get(0);
         }
     }
 
