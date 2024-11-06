@@ -58,7 +58,6 @@ public class V4_PersistenceTest {
                 Arguments.of(25, 2),
                 Arguments.of(444, 3),
                 Arguments.of(77, 4),
-                Arguments.of(888, 4),
                 Arguments.of(10, 1)
         );
     }
