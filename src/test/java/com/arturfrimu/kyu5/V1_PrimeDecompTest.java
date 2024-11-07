@@ -7,8 +7,8 @@ import org.junit.jupiter.params.provider.MethodSource;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
@@ -22,33 +22,39 @@ import static org.junit.Assert.assertEquals;
 public class V1_PrimeDecompTest {
 
     public static String factors(int n) {
-        var primeNumbers = findPrimeNumbersToN(n);
-        Map<Integer, AtomicInteger> finalResults = new LinkedHashMap<>();
+        var primeNumbersStream = IntStream.range(2, n).filter(V1_PrimeDecompTest::isPrime);
 
-        for (var prime : primeNumbers) {
-            var nCopy = n;
-            while (nCopy % prime == 0) {
-                finalResults.put(prime, new AtomicInteger(Optional.ofNullable(finalResults.get(prime)).orElse(new AtomicInteger(0)).incrementAndGet()));
-                nCopy = nCopy / prime;
-            }
-        }
+        Map<Integer, AtomicInteger> finalResults = primeNumbersStream.boxed()
+                .filter(prime -> n % prime == 0)
+                .collect(Collectors.toMap(
+                                Function.identity(),
+                                primeNumber -> {
+                                    var counter = new AtomicInteger(0);
+                                    var nCopy = n;
+                                    while (nCopy % primeNumber == 0) {
+                                        nCopy = nCopy / primeNumber;
+                                        counter.incrementAndGet();
+                                    }
+                                    return counter;
+                                },
+                                (existing, replacement) -> existing,
+                                LinkedHashMap::new
+                        )
+                );
 
         if (finalResults.isEmpty()) {
             finalResults.put(n, new AtomicInteger(1));
         }
 
-        // TODO Implement your logic here
-        return finalResults.entrySet().stream().map(entry -> {
-            var sb = new StringBuilder("(").append(entry.getKey());
-            if (entry.getValue().get() > 1) {
-                sb.append("**").append(entry.getValue());
-            }
-            return sb.append(")").toString();
-        }).collect(Collectors.joining(""));
-    }
-
-    private static int[] findPrimeNumbersToN(int n) {
-        return IntStream.range(2, n).filter(V1_PrimeDecompTest::isPrime).toArray();
+        return finalResults.entrySet()
+                .stream()
+                .map(entry -> {
+                    var sb = new StringBuilder("(").append(entry.getKey());
+                    if (entry.getValue().get() > 1) {
+                        sb.append("**").append(entry.getValue());
+                    }
+                    return sb.append(")").toString();
+                }).collect(Collectors.joining(""));
     }
 
     private static boolean isPrime(int number) {
